@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+    <model name="can_bean">
+      <static>true</static>
+      <pose>0 0 0.0545 0 0 0</pose>
+      <rpy>1.5807 0 0</rpy>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+        <pose>0 0 0 1.5708 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>
+                  /home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj
+              </uri>
+            </mesh>
+          </geometry>
+        </collision>
+        <visual name="visual">
+        <pose>0 0 0 1.5708 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>
+                  /home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj
+              </uri>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+</sdf>

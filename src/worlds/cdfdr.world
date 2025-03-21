@@ -1,0 +1,965 @@
+<sdf version="1.6">
+  <world name="empty">
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin
+      filename="gz-sim-contact-system"
+      name="gz::sim::systems::Contact">
+    </plugin>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+        <pose>1.5 1 0 0 0 0</pose>
+        <static>true</static>
+        <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>3 2</size>
+            </plane>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>3 2</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="gradinBR">
+      <static>true</static>
+      <pose>0 0 0.0545 0 0 0</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="gradinBL">
+      <static>true</static>
+      <pose>0 1 0.0545 0 0 0</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="gradinTR">
+      <static>true</static>
+      <pose>2.85 0 0.0545 0 0 0</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="gradinTL">
+      <static>true</static>
+      <pose>2.85 1 0.0545 0 0 0</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="gradinBCL">
+      <static>true</static>
+      <pose>0.475 1.7755 0.0545 0 0 -1.5708</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="gradinBCR">
+      <static>true</static>
+      <pose>0.425 0.325 0.0545 0 0 -1.5708</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="gradinBCC">
+      <static>true</static>
+      <pose>0.700 1.025 0.0545 0 0 -1.5708</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+      <model name="gradinTCL">
+      <static>true</static>
+      <pose>1.825 1.7755 0.0545 0 0 -1.5708</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="gradinTCR">
+      <static>true</static>
+      <pose>1.875 0.325 0.0545 0 0 -1.5708</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+    <model name="gradinTCC">
+      <static>true</static>
+      <pose>1.500 1.025 0.0545 0 0 -1.5708</pose>
+      <link name="bean_can1">
+        <pose relative_to='__model__'>0.075 0.25 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can2">
+        <pose relative_to='__model__'>0.075 0.35 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can3">
+        <pose relative_to='__model__'>0.075 0.45 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+      <link name="bean_can4">
+        <pose relative_to='__model__'>0.075 0.55 0 1.5708 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+                <radius>0.0365</radius>
+                <length>0.109</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <mesh>
+              <uri>file:///home/josch/ROS2/src/robot_creation/src/gazebo/Bean_Can_Aruco/Joshka_cannette1.obj</uri>
+              <scale>0.001 0.001 0.001</scale>
+            </mesh>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <model name="walls">
+      <static>true</static>
+      <pose>0 0 0.1 0 0 0</pose>
+      <link name="left">
+        <pose relative_to='__model__'>1.5 -0.005 0 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+                <size>3.0 0.01 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+                <size>3.0 0.01 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+      <link name="right">
+        <pose relative_to='__model__'>1.5 2.005 0 0 0 0</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+                <size>3.0 0.01 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+                <size>3.0 0.01 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+      <link name="down">
+        <pose relative_to='__model__'>-0.005 1 0 0 0 1.5708</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+                <size>2.0 0.01 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+                <size>2.0 0.01 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+      <link name="up">
+        <pose relative_to='__model__'>3.005 1 0 0 0 1.5708</pose>
+        <collision name="collision">
+          <geometry>
+            <box>
+                <size>2.0 0.01 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+                <size>2.0 0.01 0.1</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>
