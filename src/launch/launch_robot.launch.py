@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -36,35 +37,6 @@ def generate_launch_description():
     #             )])
     # )
 
-    default_world = os.path.join(
-        get_package_share_directory(package_name),
-        'worlds',
-        'cdfdr.world'
-        )    
-    
-    world = LaunchConfiguration('world')
-
-    world_arg = DeclareLaunchArgument(
-        'world',
-        default_value=default_world,
-        description='World to load'
-        )
-
-    gazebo = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('ros_gz_sim'), 'launch', 'gz_sim.launch.py')]),
-                    launch_arguments={'gz_args': ['-r -v4 ', world], 'on_exit_shutdown': 'true'}.items()
-             )
-    
-    spawn_entity = Node(package='ros_gz_sim', executable='create',
-                        arguments=['-topic', 'robot_description',
-                                   '-name', 'my_bot',
-                                   '-x', '1.7',
-                                   '-y', '1.7',
-                                   '-z', '0.1'],
-                        output='screen')
-    
-
     twist_mux_params = os.path.join(get_package_share_directory(package_name),'config','twist_mux.yaml')
     twist_mux = Node(
             package="twist_mux",
@@ -86,7 +58,6 @@ def generate_launch_description():
         remappings=[
             ("~/robot_description", "/robot_description"),
         ],
-        #namespace="rrbot",
     )
 
     delayed_controller_manager = TimerAction(period=3.0, actions=[controller_manager])
@@ -157,7 +128,7 @@ def generate_launch_description():
     return LaunchDescription([
         rsp,
         # joystick,
-        #twist_mux,
+        twist_mux,
         #world_arg,
         #gazebo,
         #spawn_entity,

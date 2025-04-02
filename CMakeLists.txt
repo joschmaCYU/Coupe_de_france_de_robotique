@@ -10,14 +10,16 @@ find_package(serial_driver REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav2_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
-find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
-find_package(rclpy REQUIRED)
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
 
-add_executable(multi_pose_navigator src/scripts/multi_pose_navigator.cpp)
+add_executable(multi_pose_navigator src/multi_pose_navigator.cpp)
 
 ament_target_dependencies(multi_pose_navigator
   rclcpp
@@ -32,10 +34,18 @@ install(TARGETS
 )
 
 install(DIRECTORY 
-  src/launch src/worlds src/description src/config src/scripts
+  src/launch src/worlds src/description src/config scripts
   DESTINATION share/${PROJECT_NAME}
 )
 
+ament_python_install_package(${PROJECT_NAME})
+#chmod +x scripts/my_python_node.py
+install(PROGRAMS
+  scripts/example_nav_through_poses.py
+  scripts/example_nav_to_pose.py
+  scripts/lidar_distance_node.py
+  DESTINATION lib/${PROJECT_NAME}
+)
 
 
 if(BUILD_TESTING)

@@ -1,0 +1,33 @@
+To run file :
+- ros2 launch robot_creation launch_sim.launch.py
+- ros2 launch robot_creation online_async_launch.py use_sime_time:=true (Not working)
+- ros2 launch slam_toolbox online_async_launch.py params_file:=./src/robot_creation/src/config/mapper_params_online_async.yaml use_sime_time:=true (I use instead)
+- ros2 launch robot_creation localization_launch.py map:=./my_map_save.yaml use_sime_time:=true
+- ros2 launch robot_creation navigation_launch.py use_sim_time:=true (not working) (not sure about args)
+- ros2 launch nav2_bringup navigation_launch.py use_sim_time:=true map_subscribe_transient_local:=true (use instead)
+- rviz2
+To run sim commands :
+- ros2 launch robot_creation launch_sim.launch.py
+- ros2 launch nav2_bringup navigation_launch.py use_sim_time:=true map_subscribe_transient_local:=true
+- ros2 launch robot_creation localization_launch.py map:=./my_map_save.yaml use_sime_time:=true
+
+- ros2 run robot_creation multi_pose_navigator (not working)
+
+To run ultimate sim commands :
+- ros2 launch robot_creation ultimate_launch.py
+- rviz2
+- ros2 launch robot_creation localization_launch.py map:=./my_map_save.yaml use_sime_time:=true
+- ros2 run robot_creation example_nav_to_pose.py
+
+TODO :
+Fix :
+- online_async_launch (https://github.com/SteveMacenski/slam_toolbox/blob/ros2/launch/online_async_launch.py)
+- navigation_launch
+- blue zone smaller
+- robot turn faster
+
+- Plan route and check if can in front
+- Publish init pose
+
+- Exeample nav :
+  - https://github.com/ros-navigation/navigation2/blob/main/nav2_simple_commander/launch/nav_to_pose_example_launch.py

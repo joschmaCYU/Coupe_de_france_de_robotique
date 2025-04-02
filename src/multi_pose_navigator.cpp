@@ -1,3 +1,16 @@
+//TODO test with nav2 on
+// ros2 run twist_mux twist_mux --ros-args --param-file ./src/robot_creation/src/config/twist_mux.yaml -r cmd_vel_out:=diff_cont/cmd_vel_unstamped
+// ros2 launch robot_creation online_async_launch.py use_sim_time:=true params_file:=./src/robot_creation/src/config/my_controllers.yaml
+// 
+// launc sim
+// ros2 launch robot_creation localization_launch.py map:=./my_map_save.yaml use_sime_time:=true (amcl)
+// rviz map /map transient
+// ros2 launch robot_creation navigation_launch.py use_sim_time:=true map_subscribe_transient_local:=true (nav2) 
+// rviz add costmap
+
+// real + slam + nav2(use sim time false) + rviz2 + teleop
+// in rviz add map topic costmap color scheme
+
 #include <chrono>
 #include <memory>
 #include <vector>

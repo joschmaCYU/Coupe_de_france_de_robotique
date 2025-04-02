@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -63,7 +64,7 @@ def generate_launch_description():
                         arguments=['-topic', 'robot_description',
                                    '-name', 'my_bot',
                                    '-x', '1.7',
-                                   '-y', '1.7',
+                                   '-y', '1.3',
                                    '-z', '0.1'],
                         output='screen')
 
@@ -118,15 +119,23 @@ def generate_launch_description():
             package="teleop_twist_keyboard",
             executable="teleop_twist_keyboard",
             prefix="xterm -e",
-            parameters=[{'stamped': True}],
-            remappings=[('cmd_vel','/diff_cont/cmd_vel')]
+            
+            remappings=[('cmd_vel','/diff_cont/cmd_vel_unstamped')]
     )
+
+    twist_stamper = Node(
+            package='twist_stamper',
+            executable='twist_stamper',
+            parameters=[{'use_sim_time': True}],
+            remappings=[('/cmd_vel_in','/diff_cont/cmd_vel_unstamped'),
+                        ('/cmd_vel_out','/diff_cont/cmd_vel')]
+         )
 
     # Launch them all!
     return LaunchDescription([
         rsp,
         #stick,
-        #twist_mux,
+        twist_mux,
         world_arg,
         gazebo,
         spawn_entity,
@@ -135,4 +144,5 @@ def generate_launch_description():
         ros_gz_bridge,
         ros_gz_image_bridge,
         teleop_keyboard,
+        twist_stamper,
     ])
