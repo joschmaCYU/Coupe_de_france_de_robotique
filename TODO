@@ -17,14 +17,15 @@ To run ultimate sim commands :
 - ros2 launch robot_creation ultimate_launch.py
 - rviz2
 - ros2 launch robot_creation localization_launch.py map:=./my_map_save.yaml use_sime_time:=true
+- ros2 run robot_creation initial_pose_publisher.py
 - ros2 run robot_creation example_nav_to_pose.py
 
 TODO :
 Fix :
 - online_async_launch (https://github.com/SteveMacenski/slam_toolbox/blob/ros2/launch/online_async_launch.py)
 - navigation_launch
-- blue zone smaller
 - robot turn faster
+- When ready to pick up check if (ros2 run your_package cylinder_detector) there are 4 cans
 
 - Plan route and check if can in front
 - Publish init pose

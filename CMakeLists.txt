@@ -19,6 +19,10 @@ find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
+
 add_executable(multi_pose_navigator src/multi_pose_navigator.cpp)
 
 ament_target_dependencies(multi_pose_navigator
@@ -33,6 +37,10 @@ install(TARGETS
   DESTINATION lib/${PROJECT_NAME}
 )
 
+add_executable(cylinder_detector src/cylinder_detector.cpp)
+ament_target_dependencies(cylinder_detector rclcpp sensor_msgs)
+install(TARGETS cylinder_detector DESTINATION lib/${PROJECT_NAME})
+
 install(DIRECTORY 
   src/launch src/worlds src/description src/config scripts
   DESTINATION share/${PROJECT_NAME}
@@ -44,6 +52,7 @@ install(PROGRAMS
   scripts/example_nav_through_poses.py
   scripts/example_nav_to_pose.py
   scripts/lidar_distance_node.py
+  scripts/initial_pose_publisher.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

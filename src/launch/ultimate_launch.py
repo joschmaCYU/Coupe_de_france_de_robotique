@@ -11,7 +11,6 @@ def generate_launch_description():
     # Get package share directories
     robot_creation_share = get_package_share_directory('robot_creation')
     nav2_bringup_share = get_package_share_directory('nav2_bringup')
-    slam_toolbox_share = get_package_share_directory('slam_toolbox')
     
     # Include robot_creation launch_sim.launch.py
     launch_sim = IncludeLaunchDescription(
@@ -19,9 +18,7 @@ def generate_launch_description():
             os.path.join(robot_creation_share, 'launch', 'launch_sim.launch.py')
         )
     )
-
-    # Include localization_launch.py with parameters.
-    # Note: We use "use_sim_time" (correct spelling) instead of "use_sime_time"
+    
     localization_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(robot_creation_share, 'launch', 'localization_launch.py')
@@ -55,7 +52,7 @@ def generate_launch_description():
     # Add actions to the launch description in the desired order.
     ld.add_action(launch_sim)
     ld.add_action(navigation_launch_delayed)
+    # ld.add_action(navigation_launch)
     #ld.add_action(localization_launch_delayed)
-    #ld.add_action(slam_launch_delayed)
 
     return ld

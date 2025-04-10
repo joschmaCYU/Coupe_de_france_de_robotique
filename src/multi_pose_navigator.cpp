@@ -142,8 +142,6 @@ int main(int argc, char ** argv)
   pose2.pose.orientation.w = 1.0;
   goal_poses.push_back(pose2);
 
-  
-
   // (Add more poses if needed)
 
   node->send_goal(goal_poses);
