@@ -19,6 +19,7 @@
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "nav2_msgs/action/navigate_through_poses.hpp"
 #include "geometry_msgs/msg/pose_stamped.hpp"
+#include "std_msgs/msg/int32.hpp"
 
 using namespace std::chrono_literals;
 using NavigateThroughPoses = nav2_msgs::action::NavigateThroughPoses;
@@ -28,10 +29,17 @@ class MultiPoseNavigator : public rclcpp::Node
 {
 public:
   MultiPoseNavigator()
-  : Node("multi_pose_navigator")
-  {
+  : Node("multi_pose_navigator"), first_pose_arrived_(false), last_cylinder_value_(0) {
     // Create the action client for the "navigate_through_poses" action
     action_client_ = rclcpp_action::create_client<NavigateThroughPoses>(this, "navigate_through_poses");
+
+    // Subscribe to the "cylinder" topic (assumed type std_msgs::msg::Int32)
+    cylinder_sub_ = this->create_subscription<std_msgs::msg::Int32>(
+      "cylinder", 10,
+      [this](const std_msgs::msg::Int32::SharedPtr msg) {
+        last_cylinder_value_ = msg->data;
+      }
+    );
   }
 
   bool wait_for_server()
@@ -55,8 +63,16 @@ public:
     send_goal_options.feedback_callback =
       [this](GoalHandleNTP::SharedPtr,
              const std::shared_ptr<const NavigateThroughPoses::Feedback> feedback) {
-        RCLCPP_INFO(this->get_logger(), "Feedback: Distance remaining: %.2f",
-                    feedback->distance_remaining);
+        RCLCPP_INFO(this->get_logger(), "Feedback: Distance remaining: %.2f", feedback->distance_remaining);
+        // Check if robot has arrived at first pose (threshold: 0.25) and perform cylinder check only once
+        if (!first_pose_arrived_ && feedback->distance_remaining <= 0.3) {
+          first_pose_arrived_ = true;
+          if (last_cylinder_value_ == 4) {
+            RCLCPP_INFO(this->get_logger(), "Cylinder condition met: value is 4");
+          } else {
+            RCLCPP_ERROR(this->get_logger(), "Cylinder condition not met: value is %d", last_cylinder_value_);
+          }
+        }
       };
 
     // Send goal asynchronously and wait until it is accepted
@@ -101,6 +117,9 @@ public:
 
 private:
   rclcpp_action::Client<NavigateThroughPoses>::SharedPtr action_client_;
+  rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr cylinder_sub_;  // New subscription
+  int last_cylinder_value_;  // Store last value from "cylinder" topic
+  bool first_pose_arrived_;  // Flag to check if first pose has been reached
 };
 
 int main(int argc, char ** argv)
@@ -120,8 +139,8 @@ int main(int argc, char ** argv)
   geometry_msgs::msg::PoseStamped pose1;
   pose1.header.frame_id = "map";
   pose1.header.stamp = node->now();
-  pose1.pose.position.x = 1.5;
-  pose1.pose.position.y = 1.0;
+  pose1.pose.position.x = 0.5;
+  pose1.pose.position.y = 0.0;
   pose1.pose.position.z = 0.05;
   pose1.pose.orientation.x = 0.0;
   pose1.pose.orientation.y = 0.0;
@@ -133,8 +152,8 @@ int main(int argc, char ** argv)
   geometry_msgs::msg::PoseStamped pose2;
   pose2.header.frame_id = "map";
   pose2.header.stamp = node->now();
-  pose2.pose.position.x = 0.62;
-  pose2.pose.position.y = 0.59;
+  pose2.pose.position.x = 0.5;
+  pose2.pose.position.y = 0.5;
   pose2.pose.position.z = 0.05;
   pose2.pose.orientation.x = 0.0;
   pose2.pose.orientation.y = 0.0;

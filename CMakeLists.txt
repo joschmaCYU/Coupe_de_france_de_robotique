@@ -22,7 +22,6 @@ find_package(rclpy REQUIRED)
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-
 add_executable(multi_pose_navigator src/multi_pose_navigator.cpp)
 
 ament_target_dependencies(multi_pose_navigator
@@ -53,6 +52,7 @@ install(PROGRAMS
   scripts/example_nav_to_pose.py
   scripts/lidar_distance_node.py
   scripts/initial_pose_publisher.py
+  scripts/max_launch.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

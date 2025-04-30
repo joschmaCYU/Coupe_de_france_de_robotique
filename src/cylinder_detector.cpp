@@ -1,9 +1,9 @@
-
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include <vector>
 #include <cmath>
 #include <Eigen/Dense>
+#include "std_msgs/msg/int32.hpp"
 
 using std::placeholders::_1;
 
@@ -12,10 +12,12 @@ public:
     CylinderDetector() : Node("cylinder_detector") {
         scan_sub_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
             "/scan", 10, std::bind(&CylinderDetector::scan_callback, this, _1));
+        cylinder_pub_ = this->create_publisher<std_msgs::msg::Int32>("cylinder", 10);
     }
 
 private:
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr scan_sub_;
+    rclcpp::Publisher<std_msgs::msg::Int32>::SharedPtr cylinder_pub_;
 
     struct Point2D {
         float x, y;
@@ -34,16 +36,20 @@ private:
 
         auto clusters = euclidean_clustering(points, 0.05);
 
-        int i = 0;
+        int cylinder_count = 0;
 
         for (const auto& cluster : clusters) {
             if (cluster.size() < 6) continue;
             auto [cx, cy, r] = fit_circle(cluster);
             if (r > 0.02 && r < 0.15) {
-                RCLCPP_INFO(this->get_logger(), "Cylinder at (%.2f, %.2f), r=%.2f, %d", cx, cy, r, i);
-                i++;
+                RCLCPP_INFO(this->get_logger(), "Cylinder at (%.2f, %.2f), r=%.2f, %d", cx, cy, r, cylinder_count);
+                cylinder_count++;
             }
         }
+
+        std_msgs::msg::Int32 count_msg;
+        count_msg.data = cylinder_count;
+        cylinder_pub_->publish(count_msg);
     }
 
     std::vector<std::vector<Point2D>> euclidean_clustering(

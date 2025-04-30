@@ -3,9 +3,10 @@
 import os
 
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, TimerAction
+from launch.actions import IncludeLaunchDescription, TimerAction, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
+from launch_ros.actions import Node
 
 def generate_launch_description():
     # Get package share directories
@@ -21,11 +22,11 @@ def generate_launch_description():
     
     localization_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-            os.path.join(robot_creation_share, 'launch', 'localization_launch.py')
+            os.path.join(nav2_bringup_share, 'launch', 'localization_launch.py')
         ),
         launch_arguments={
             'map': './my_map_save.yaml',
-            'use_sim_time': 'true'
+            'use_sim_time': 'true',
         }.items()
     )
 
@@ -36,23 +37,32 @@ def generate_launch_description():
         ),
         launch_arguments={
             'use_sim_time': 'true',
-            'map_subscribe_transient_local': 'true'
+            'map_subscribe_transient_local': 'true',
         }.items()
     )
 
     # Optionally, add timers to delay some launches if needed.
     # For example, if you want to delay launching localization by 5 seconds:
-    localization_launch_delayed = TimerAction(period=10.0, actions=[localization_launch])
+    localization_launch_delayed = TimerAction(period=20.0, actions=[localization_launch])
     navigation_launch_delayed = TimerAction(period=5.0, actions=[navigation_launch])
+    
+    script_path = os.path.join(robot_creation_share, 'scripts', 'initial_pose_publisher.py')
+    initial_pose_publisher_exec = TimerAction(
+        period=35.0,
+        actions=[
+            ExecuteProcess(
+                cmd=['python3', script_path],
+                output='screen'
+            )
+        ]
+    )
     
     ld = LaunchDescription()
 
-    # Fix bug when nav + loc are in same launch file
-
-    # Add actions to the launch description in the desired order.
     ld.add_action(launch_sim)
     ld.add_action(navigation_launch_delayed)
-    # ld.add_action(navigation_launch)
-    #ld.add_action(localization_launch_delayed)
+    ld.add_action(localization_launch_delayed)
+    ld.add_action(initial_pose_publisher_exec)
+
 
     return ld
