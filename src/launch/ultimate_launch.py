@@ -19,16 +19,6 @@ def generate_launch_description():
             os.path.join(robot_creation_share, 'launch', 'launch_sim.launch.py')
         )
     )
-    
-    localization_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(nav2_bringup_share, 'launch', 'localization_launch.py')
-        ),
-        launch_arguments={
-            'map': './my_map_save.yaml',
-            'use_sim_time': 'true',
-        }.items()
-    )
 
     # Include navigation_launch.py from nav2_bringup with use_sim_time parameter.
     navigation_launch = IncludeLaunchDescription(
@@ -38,6 +28,16 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': 'true',
             'map_subscribe_transient_local': 'true',
+        }.items()
+    )
+    
+    localization_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(nav2_bringup_share, 'launch', 'localization_launch.py')
+        ),
+        launch_arguments={
+            'map': './my_map_save.yaml',
+            'use_sim_time': 'true',
         }.items()
     )
 
