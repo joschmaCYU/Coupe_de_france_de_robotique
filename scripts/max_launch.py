@@ -12,6 +12,7 @@ class RosoutMonitor(Node):
         self._launched_loc = False
         self._launched_ini_pose = False
         self._launched_nav_to_pose = False
+        self._ini_pose_count = 0   # new: counter for initial pose message occurrences
 
     def cb(self, msg: Log):
         if not self._launched_nav2 and ('Activating controllers: [ diff_cont ]' in msg.msg or 'Activating controllers: [ joint_broad ]' in msg.msg):
@@ -28,19 +29,53 @@ class RosoutMonitor(Node):
                 'use_sim_time:=true', 'map:=./my_map_save.yaml'
             ])
             self._launched_loc = True
-        if not self._launched_ini_pose and 'Please set the initial pose...' in msg.msg:
-            self.get_logger().info('Activation détectée : lancement de la position initiale')
-            subprocess.Popen([
-                'ros2', 'run', 'robot_creation', 'initial_pose_publisher.py'
-            ])
-            self._launched_ini_pose = True
-        if not self._launched_nav_to_pose and 'Creating bond timer...' in msg.msg:
-            self.get_logger().info('Activation détectée : lancement de la position initiale')
-            subprocess.Popen([
-                'ros2', 'run', 'robot_creation', 'example_nav_to_pose.py'
-            ])
-            self._launched_nav_to_pose = True
-        #ros2 run robot_creation example_nav_to_pose.py
+        # Updated block to retry initial pose publisher
+        if 'Please set the initial pose...' in msg.msg:
+            if self._ini_pose_count == 0:
+                # if blue
+                subprocess.Popen([
+                        'ros2', 'run', 'robot_creation', 'initial_pose_publisher.py'
+                ])
+                self._launched_ini_pose = True
+
+            self._ini_pose_count += 1
+            if self._ini_pose_count > 5:
+                self.get_logger().info('Activation détectée : lancement/retry de la position initiale (attempt count: {})'.format(self._ini_pose_count))
+                subprocess.Popen([
+                    'ros2', 'run', 'robot_creation', 'initial_pose_publisher.py'
+                ])
+                self._launched_ini_pose = True
+                self._ini_pose_count = 0
+        if not self._launched_nav_to_pose and self._launched_ini_pose:
+            if 'Creating bond timer...' in msg.msg:
+                self.get_logger().info('Activation détectée : va !')
+                
+                # subprocess.Popen([
+                #     'ros2', 'run', 'robot_creation', 'robot_manager'
+                # ])
+
+                subprocess.Popen([
+                    'ros2', 'run', 'robot_creation', 'cylinder_detector'
+                ])
+
+
+
+                # subprocess.Popen([
+                #     'ros2', 'run', 'robot_creation', 'multi_pose_navigator'
+                # ])
+                self._launched_nav_to_pose = True
+        # if self._launched_nav_to_pose and ("Navigation through poses succeeded!" in msg.msg or "Goal succeeded" in msg.msg):
+        #     self.get_logger().info('Next pose !')
+        #     subprocess.Popen([
+        #             'ros2', 'run', 'robot_creation', 'example_nav_through_poses.py'
+        #     ])
+            
+
+# [controller_server-1] [INFO] [1746705727.939243091] [controller_server]: Reached the goal!
+# [controller_server-1] [INFO] [1746705727.941357204] [controller_server]: Optimizer reset
+# [INFO] [1746705727.962726469] [multi_pose_navigator]: Navigation through poses succeeded!
+# [bt_navigator-5] [INFO] [1746705727.962573560] [bt_navigator]: Goal succeeded
+
 
 def main(args=None):
     rclpy.init(args=args)

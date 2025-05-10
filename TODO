@@ -1,3 +1,7 @@
+- colcon build --symlink-install --packages-select robot_creation
+- source install/setup.bash
+
+
 To run file :
 - ros2 launch robot_creation launch_sim.launch.py
 - ros2 launch robot_creation online_async_launch.py use_sime_time:=true (Not working)
@@ -19,14 +23,13 @@ To run ultimate sim commands :
 - ros2 run robot_creation example_nav_to_pose.py
 
 TODO :
+- Do a button that on = blue team, off = yellow team
 Fix :
-- online_async_launch (https://github.com/SteveMacenski/slam_toolbox/blob/ros2/launch/online_async_launch.py)
-- navigation_launch
 - robot turn faster
-- When ready to pick up check if (ros2 run your_package cylinder_detector) there are 4 cans
-
 - Plan route and check if can in front
-- Publish init pose
+
+number of crashed starts: 1
+- failed to send response to /planner_server/change_state (timeout): client will not receive response, at ./src/rmw_response.cpp:153, at ./src/rcl/service.c:400
 
 - Exeample nav :
   - https://github.com/ros-navigation/navigation2/blob/main/nav2_simple_commander/launch/nav_to_pose_example_launch.py

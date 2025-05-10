@@ -34,8 +34,8 @@ class InitialPosePublisher(Node):
         # Set orientation (quaternion)
         msg.pose.pose.orientation.x = 0.0
         msg.pose.pose.orientation.y = 0.0
-        msg.pose.pose.orientation.z = 0.0
-        msg.pose.pose.orientation.w = 1.0  # Neutral orientation
+        msg.pose.pose.orientation.z = 0.7071068
+        msg.pose.pose.orientation.w = -0.7071068  # Neutral orientation
         
         # Set covariance matrix (6x6 row-major)
         msg.pose.covariance = [

@@ -42,7 +42,7 @@ private:
             if (cluster.size() < 6) continue;
             auto [cx, cy, r] = fit_circle(cluster);
             if (r > 0.02 && r < 0.15) {
-                RCLCPP_INFO(this->get_logger(), "Cylinder at (%.2f, %.2f), r=%.2f, %d", cx, cy, r, cylinder_count);
+                // RCLCPP_INFO(this->get_logger(), "Cylinder at (%.2f, %.2f), r=%.2f, %d", cx, cy, r, cylinder_count);
                 cylinder_count++;
             }
         }

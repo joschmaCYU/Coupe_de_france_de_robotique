@@ -29,7 +29,7 @@ class MultiPoseNavigator : public rclcpp::Node
 {
 public:
   MultiPoseNavigator()
-  : Node("multi_pose_navigator"), first_pose_arrived_(false), last_cylinder_value_(0) {
+  : Node("multi_pose_navigator"), last_cylinder_value_(0) {
     // Create the action client for the "navigate_through_poses" action
     action_client_ = rclcpp_action::create_client<NavigateThroughPoses>(this, "navigate_through_poses");
 
@@ -63,10 +63,16 @@ public:
     send_goal_options.feedback_callback =
       [this](GoalHandleNTP::SharedPtr,
              const std::shared_ptr<const NavigateThroughPoses::Feedback> feedback) {
-        RCLCPP_INFO(this->get_logger(), "Feedback: Distance remaining: %.2f", feedback->distance_remaining);
+        static rclcpp::Time last_print = this->now();  // static local variable
+        auto current_time = this->now();
+        if ((current_time - last_print).seconds() >= 0.2) {
+          RCLCPP_INFO(this->get_logger(), "Feedback: Distance remaining: %.2f %d", feedback->distance_remaining, first_pose_arrived_);
+          last_print = current_time;
+        }
         // Check if robot has arrived at first pose (threshold: 0.25) and perform cylinder check only once
-        if (!first_pose_arrived_ && feedback->distance_remaining <= 0.3) {
+        if (!first_pose_arrived_ && feedback->distance_remaining <= 0.3 && feedback->distance_remaining != 0) {
           first_pose_arrived_ = true;
+          RCLCPP_INFO(this->get_logger(), "Arrived at first pose %.2f", feedback->distance_remaining);
           if (last_cylinder_value_ == 4) {
             RCLCPP_INFO(this->get_logger(), "Cylinder condition met: value is 4");
           } else {
@@ -93,8 +99,7 @@ public:
     auto future_result = action_client_->async_get_result(goal_handle);
     RCLCPP_INFO(get_logger(), "Waiting for result...");
     if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), future_result)
-          != rclcpp::FutureReturnCode::SUCCESS)
-    {
+          != rclcpp::FutureReturnCode::SUCCESS) {
       RCLCPP_ERROR(get_logger(), "Failed to get result");
       return;
     }
@@ -102,6 +107,7 @@ public:
     switch(result.code) {
       case rclcpp_action::ResultCode::SUCCEEDED:
         RCLCPP_INFO(get_logger(), "Navigation through poses succeeded!");
+        RCLCPP_INFO(get_logger(), "Spin");
         break;
       case rclcpp_action::ResultCode::ABORTED:
         RCLCPP_ERROR(get_logger(), "Navigation through poses aborted");
@@ -118,8 +124,8 @@ public:
 private:
   rclcpp_action::Client<NavigateThroughPoses>::SharedPtr action_client_;
   rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr cylinder_sub_;  // New subscription
-  int last_cylinder_value_;  // Store last value from "cylinder" topic
-  bool first_pose_arrived_;  // Flag to check if first pose has been reached
+  int last_cylinder_value_ = 0;  // Store last value from "cylinder" topic
+  bool first_pose_arrived_ = false;  // Flag to check if first pose has been reached
 };
 
 int main(int argc, char ** argv)
@@ -149,22 +155,22 @@ int main(int argc, char ** argv)
   goal_poses.push_back(pose1);
 
   // Second goal
-  geometry_msgs::msg::PoseStamped pose2;
-  pose2.header.frame_id = "map";
-  pose2.header.stamp = node->now();
-  pose2.pose.position.x = 0.5;
-  pose2.pose.position.y = 0.5;
-  pose2.pose.position.z = 0.05;
-  pose2.pose.orientation.x = 0.0;
-  pose2.pose.orientation.y = 0.0;
-  pose2.pose.orientation.z = 0.0;
-  pose2.pose.orientation.w = 1.0;
-  goal_poses.push_back(pose2);
+  // geometry_msgs::msg::PoseStamped pose2;
+  // pose2.header.frame_id = "map";
+  // pose2.header.stamp = node->now();
+  // pose2.pose.position.x = 0.5;
+  // pose2.pose.position.y = -0.5;
+  // pose2.pose.position.z = 0.05;
+  // pose2.pose.orientation.x = 0.0;
+  // pose2.pose.orientation.y = 0.0;
+  // pose2.pose.orientation.z = 0.0;
+  // pose2.pose.orientation.w = 1.0;
+  // goal_poses.push_back(pose2);
 
   // (Add more poses if needed)
 
   node->send_goal(goal_poses);
-
+  
   rclcpp::shutdown();
   return 0;
 }

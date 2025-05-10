@@ -23,22 +23,21 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 add_executable(multi_pose_navigator src/multi_pose_navigator.cpp)
-
 ament_target_dependencies(multi_pose_navigator
   rclcpp
   rclcpp_action
   nav2_msgs
   geometry_msgs
 )
-
-install(TARGETS
-  multi_pose_navigator
-  DESTINATION lib/${PROJECT_NAME}
-)
+install(TARGETS multi_pose_navigator DESTINATION lib/${PROJECT_NAME})
 
 add_executable(cylinder_detector src/cylinder_detector.cpp)
 ament_target_dependencies(cylinder_detector rclcpp sensor_msgs)
 install(TARGETS cylinder_detector DESTINATION lib/${PROJECT_NAME})
+
+add_executable(robot_manager src/robot_manager.cpp)
+ament_target_dependencies(robot_manager rclcpp std_msgs geometry_msgs)
+install(TARGETS robot_manager DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY 
   src/launch src/worlds src/description src/config scripts

@@ -87,7 +87,7 @@ def generate_launch_description():
             executable='map_server',
             name='map_server',
             output='screen',
-            parameters=[configured_params],
+            parameters=[configured_params, ],
             remappings=remappings),
 
         Node(

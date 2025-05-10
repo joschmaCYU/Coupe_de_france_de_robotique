@@ -63,9 +63,10 @@ def generate_launch_description():
     spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
                                    '-name', 'my_bot',
-                                   '-x', '1.7',
-                                   '-y', '1.3',
-                                   '-z', '0.1'],
+                                   '-x', '1.25',
+                                   '-y', '0.20',
+                                   '-z', '0.5',
+                                   '-Y', '1.58'],
                         output='screen')
 
     diff_drive_spawner = Node(
