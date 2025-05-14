@@ -26,7 +26,7 @@ class RosoutMonitor(Node):
             self.get_logger().info('Activation détectée : lancement de localisation')
             subprocess.Popen([
                 'ros2', 'launch', 'robot_creation', 'localization_launch.py',
-                'use_sim_time:=true', 'map:=./my_map_save.yaml'
+                'use_sim_time:=true', 'map:=./src/robot_creation/src/my_map/my_map_save.yaml'
             ])
             self._launched_loc = True
         # Updated block to retry initial pose publisher
@@ -50,15 +50,21 @@ class RosoutMonitor(Node):
             if 'Creating bond timer...' in msg.msg:
                 self.get_logger().info('Activation détectée : va !')
                 
-                # subprocess.Popen([
-                #     'ros2', 'run', 'robot_creation', 'robot_manager'
-                # ])
+                subprocess.Popen([
+                    'ros2', 'run', 'robot_creation', 'robot_manager'
+                ])
 
                 subprocess.Popen([
                     'ros2', 'run', 'robot_creation', 'cylinder_detector'
                 ])
 
+                subprocess.Popen([
+                    'ros2', 'run', 'robot_creation', 'arduino_serial_node_read'
+                ])
 
+                subprocess.Popen([
+                    'ros2', 'run', 'robot_creation', 'arduino_serial_node_write'
+                ])
 
                 # subprocess.Popen([
                 #     'ros2', 'run', 'robot_creation', 'multi_pose_navigator'
