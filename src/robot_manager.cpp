@@ -1,6 +1,6 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/bool.hpp"
-#include "geometry_msgs/msg/pose.hpp"  // Added include
+#include "geometry_msgs/msg/pose.hpp" 
 #include <cstdlib>  // for std::system
 #include <cstdio>   // for std::snprintf
 
@@ -16,20 +16,22 @@ public:
   float initial_pose_Y = 0.0;
   float initial_pose_theta = 0.0;
 
+  bool tring_to_grab = false;
+
   int got_cans = 0;
 
   bool can_in_hands = false;
 
-  RobotManager() : Node("robot_manager"), grab_started_(false) {
+  RobotManager() : Node("robot_manager") {
     // Check if blue or yellow team
     // TODO 
-    // make a file of all the can coords
+    // make a file of all the can coords (center) && depo spot
     // find the closest cans
     // if all there take
       // go to depo spot
     // else 
     // find other closest cans
-
+    publisher();
     subscribers();
 
                 // TODO remove this from main needs to be called when needed
@@ -37,7 +39,8 @@ public:
     // if blue start 0.225, 0.875
     // if yellow start 2.775, 0.875
 
-    if (got_cans == 0 && !grab_started_ && !can_in_hands) {
+    // match just started go to grab cans
+    if (got_cans == 0 && !tring_to_grab && !can_in_hands) {
       if (teamBlue) {
         initial_pose_X = 0.225;
         initial_pose_Y = 0.875;
@@ -96,7 +99,7 @@ public:
       if (msg->data) {
       RCLCPP_INFO(this->get_logger(), "Received /grabed true; launching second navigation (pose2) ...");
       std::system("ros2 run robot_creation example_nav_to_pose.py pose2");
-        grab_started_ = false;
+        tring_to_grab = false;
         can_in_hands = true;
       }
     }
@@ -106,15 +109,23 @@ public:
     arrived_sub_ = this->create_subscription<std_msgs::msg::Bool>(
       "/arrived", 10,
       [this](const std_msgs::msg::Bool::SharedPtr msg) {
-        if (msg->data && !grab_started_) {
+        if (msg->data && !tring_to_grab) {
         RCLCPP_INFO(this->get_logger(), "Received /arrived true; launching grab.py ...");
-          std::system("ros2 run robot_creation grab.py");
           if (can_in_hands) {
             can_in_hands = false;
             got_cans += 1;
           } else {
-            // TODO write serial command to start grabbing
-            grab_started_ = true;
+            // Sending to arduino try to grab cans
+            tring_to_grab = true;
+            send_arduino_publisher_ = this->create_publisher<std_msgs::msg::String>("send_to_arduino", 10);
+            timer_ = this->create_wall_timer(
+              std::chrono::seconds(1),
+              [this]() {
+                std_msgs::msg::String msg;
+                msg.data = "GRAB:1";
+                send_arduino_publisher_->publish(msg);
+              }
+            );
           }    
         }
       }
@@ -122,10 +133,10 @@ public:
 
     // Subscribe to /teamBlue topic.
     team_blue_sub_ = this->create_subscription<std_msgs::msg::Bool>(
-      "/teamBlue", 10,
+      "/team_blue", 10,
       [this](const std_msgs::msg::Bool::SharedPtr msg) {
         teamBlue = msg->data;
-        RCLCPP_INFO(this->get_logger(), "Received /teamBlue: %s", teamBlue ? "true" : "false");
+        RCLCPP_INFO(this->get_logger(), "Received /team_blue: %s", teamBlue ? "true" : "false");
       }
     );
 
@@ -143,13 +154,18 @@ public:
     );
   }
 
+  void publisher() {
+    send_arduino_pub_ = this->create_publisher<std_msgs::msg::Int32>("send_to_arduino", 10);
+  }
+
 private:
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr arrived_sub_;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr grabed_sub_;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr team_blue_sub_;
   rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr pose_sub_;
+  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr send_arduino_pub_;
 
-  bool grab_started_;
+  bool tring_to_grab;
 };
 
 int main(int argc, char ** argv) {

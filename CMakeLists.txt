@@ -36,7 +36,7 @@ install(DIRECTORY src/launch src/worlds src/description src/config scripts src/s
 )
 
 add_executable(arduino_serial_node_read src/serial_communication/arduino_serial_node_read.cpp)
-ament_target_dependencies(arduino_serial_node_read rclcpp std_msgs serial_driver)
+ament_target_dependencies(arduino_serial_node_read rclcpp std_msgs serial_driver geometry_msgs)
 install(TARGETS arduino_serial_node_read DESTINATION lib/${PROJECT_NAME})
 
 add_executable(arduino_serial_node_write src/serial_communication/arduino_serial_node_write.cpp)
