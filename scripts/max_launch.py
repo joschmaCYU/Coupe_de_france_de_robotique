@@ -79,9 +79,10 @@ class RosoutMonitor(Node):
             if self._tf_timeout_timestamp is None:
                 self._tf_timeout_timestamp = time.time()
             else:
-                if (time.time() - self._tf_timeout_timestamp) >= 60:
+                if (time.time() - self._tf_timeout_timestamp) >= 40:
                     self.get_logger().info('same -> killing everything and relaunching')
-                    os.killpg(os.getpgid(os.getpid()), signal.SIGINT)
+                    # sys.exit(1)
+                    os.killpg(os.getpgid(os.getpid()), signal.SIGABRT)
 
                     subprocess.Popen(['ros2', 'run', 'robot_creation', 'max_launch.py'])
                     self._tf_timeout_timestamp = time.time()
@@ -92,12 +93,6 @@ class RosoutMonitor(Node):
         #             'ros2', 'run', 'robot_creation', 'example_nav_through_poses.py'
         #     ])
             
-
-# [controller_server-1] [INFO] [1746705727.939243091] [controller_server]: Reached the goal!
-# [controller_server-1] [INFO] [1746705727.941357204] [controller_server]: Optimizer reset
-# [INFO] [1746705727.962726469] [multi_pose_navigator]: Navigation through poses succeeded!
-# [bt_navigator-5] [INFO] [1746705727.962573560] [bt_navigator]: Goal succeeded
-
 
 def main(args=None):
     rclpy.init(args=args)

@@ -26,6 +26,9 @@ TODO :
 - Do a button that on = blue team, off = yellow team (find some way to pass the argument to launch_sim)
 - Fix arduino (cmd_vel)
 - Send only once to arduino ?
+REAL ROBOT :
+- Change to the good device in ros2 control
+- enc_counts_per_rev
 Fix :
 - robot turn faster
 - Plan route and check if can in front

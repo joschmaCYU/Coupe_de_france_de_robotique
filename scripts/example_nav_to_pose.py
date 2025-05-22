@@ -14,7 +14,6 @@ class PoseNavigator(Node):
 
     def __init__(self):
         super().__init__('pose_navigator')
-        self.subscription
         self.arrived_pub = self.create_publisher(Bool, '/arrived', 10)
 
         for i in range(len(sys.argv)):
@@ -33,21 +32,25 @@ class PoseNavigator(Node):
             else:
                 print(sys.argv[i])
 
-        self.navigator = BasicNavigator()
-        self.subscription = self.create_subscription(
-            PoseStamped,
-            '/go_to_pose',
-            self.pose_callback,
-            10)
+        
 
-    def pose_callback(self, msg):
+        self.navigator = BasicNavigator()
+        self.pose_callback()
+        
+        # self.subscription = self.create_subscription(
+        #     PoseStamped,
+        #     '/go_to_pose',
+        #     self.pose_callback,
+        #     10)
+
+    def pose_callback(self):
         self.get_logger().info('Received goal pose, setting as initial pose and navigating.')
 
         initial_pose = PoseStamped()
         initial_pose.header.frame_id = 'map'
         initial_pose.header.stamp = self.navigator.get_clock().now().to_msg()
-        initial_pose.pose.position.x = self.initial_pose_X
-        initial_pose.pose.position.y = self.initial_pose_Y
+        initial_pose.pose.position.x = self.initial_pose_X-1.72
+        initial_pose.pose.position.y = self.initial_pose_Y-1.41
         initial_pose.pose.orientation.z = self.initial_pose_theta
         initial_pose.pose.orientation.w = 1.0
         self.navigator.setInitialPose(initial_pose)
@@ -59,8 +62,8 @@ class PoseNavigator(Node):
         goal_pose = PoseStamped()
         goal_pose.header.frame_id = 'map'
         goal_pose.header.stamp = self.navigator.get_clock().now().to_msg()
-        goal_pose.pose.position.x = self.pose_X
-        goal_pose.pose.position.y = self.pose_Y
+        goal_pose.pose.position.x = self.pose_X-1.72
+        goal_pose.pose.position.y = self.pose_Y-1.41
         goal_pose.pose.orientation.z = self.pose_theta
         goal_pose.pose.orientation.w = 1.0
         self.navigator.goToPose(goal_pose)
@@ -69,8 +72,7 @@ class PoseNavigator(Node):
             feedback = self.navigator.getFeedback()
             if feedback:
                 eta = Duration.from_msg(feedback.estimated_time_remaining).nanoseconds / 1e9
-                self.get_logger().info(f'Estimated time of arrival: {feedback.estimated_time_remaining:.2f}')
-                self.get_logger().info(f'Estimated time of arrival: {eta:.2f} seconds.')
+                # self.get_logger().info(f'Estimated time of arrival: {eta:.2f} seconds.')
 
         result = self.navigator.getResult()
         if result == TaskResult.SUCCEEDED:

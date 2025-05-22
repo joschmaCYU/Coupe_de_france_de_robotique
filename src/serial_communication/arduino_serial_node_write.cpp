@@ -44,8 +44,6 @@ public:
             "send_to_arduino", 10,
             [this](const std_msgs::msg::String::SharedPtr msg) {
                 static std::string last_text;
-                printf("Received: %s\n", msg->data.c_str());
-                printf("Last: %s\n", last_text.c_str());
                 if (msg->data != last_text) {
                     last_text = msg->data;
                     writeSerial(msg->data);
@@ -62,7 +60,6 @@ private:
                 std::vector<uint8_t> data(command.begin(), command.end());
                 
                 serial_port_->send(data);
-                RCLCPP_INFO(this->get_logger(), "Sent: %s", command.c_str());
             }
         } catch (const std::exception & e) {
             RCLCPP_ERROR(this->get_logger(), "Write error: %s", e.what());

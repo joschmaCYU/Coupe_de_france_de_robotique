@@ -51,7 +51,7 @@ public:
         //0.075 0.4 0 (center of BR)
         goal_pose_X = 0.150; // go a bit above (more ?)
         goal_pose_Y = 0.4;
-        goal_pose_theta = 0.0;
+        goal_pose_theta = -1.0;
       } else {
         initial_pose_X = 2.775;
         initial_pose_Y = 0.875;
