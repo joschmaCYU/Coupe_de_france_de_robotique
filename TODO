@@ -23,7 +23,9 @@ To run ultimate sim commands :
 - ros2 run robot_creation example_nav_to_pose.py
 
 TODO :
-- Do a button that on = blue team, off = yellow team
+- Do a button that on = blue team, off = yellow team (find some way to pass the argument to launch_sim)
+- Fix arduino (cmd_vel)
+- Send only once to arduino ?
 Fix :
 - robot turn faster
 - Plan route and check if can in front

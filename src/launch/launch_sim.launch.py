@@ -60,14 +60,26 @@ def generate_launch_description():
              )
 
     # Run the spawner node from the ros_gz_sim package. The entity name doesn't really matter if you only have a single robot.
+    # TEAM BLUE :
+    # spawn_entity = Node(package='ros_gz_sim', executable='create',
+    #                     arguments=['-topic', 'robot_description',
+    #                                '-name', 'my_bot',
+    #                                '-x', '0,16',
+    #                                '-y', '0.90',
+    #                                '-z', '0.5',
+    #                                '-Y', '0.0'],
+    #                     output='screen')
+
+    # TEAM YELLOW :
     spawn_entity = Node(package='ros_gz_sim', executable='create',
                         arguments=['-topic', 'robot_description',
-                                   '-name', 'my_bot',
-                                   '-x', '1.25',
-                                   '-y', '0.20',
-                                   '-z', '0.5',
-                                   '-Y', '1.58'],
+                            '-name', 'my_bot',
+                            '-x', '2.85',
+                            '-y', '0.90',
+                            '-z', '0.5',
+                            '-Y', '3.14'],
                         output='screen')
+
 
     diff_drive_spawner = Node(
         package="controller_manager",

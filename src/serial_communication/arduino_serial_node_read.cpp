@@ -91,18 +91,11 @@ private:
                 // msg.encoder0 = enc_val[0];
                 // msg.encoder1 = enc_val[1];
                 // encoder_publisher_->publish(msg);
-            } else if (key == "BUTTON") {
-                /*auto msg = std_msgs::msg::Bool();
-                msg.data = (value == "1");
-                button_publisher_->publish(msg);*/
             } else if (key == "TEAMBLUE") {
                 auto bool_msg = std_msgs::msg::Bool();
                 bool_msg.data = (value != "0");
                 teamBlue_pub_->publish(bool_msg);
-            } else if (key == "POSE") {
-                auto pose_msg = geometry_msgs::msg::Pose();
-                pose_msg = value;
-                pose_pub_->publish(pose_msg);
+                
             } else if (key == "GRAB") {
                 auto grab_msg = std_msgs::msg::Bool();
                 grab_msg.data = (value != "0");
@@ -124,6 +117,10 @@ private:
                     const std::string message(buffer.begin(), buffer.begin() + bytes_read);
                     RCLCPP_INFO(this->get_logger(), "Received: %s", message.c_str());
                     processMessage(message);
+
+                    auto recived_msg = std_msgs::msg::String();
+                    recived_msg.data = "RECIVED";
+                    send_pub_->publish(recived_msg);
                 }
             }
         } catch (const std::exception & e) {
@@ -133,7 +130,7 @@ private:
 
     void publisher() {
         teamBlue_pub_ = this->create_publisher<std_msgs::msg::Bool>("team_blue", 10);
-        pose_pub_ = this->create_publisher<std_msgs::msg::String>("send_to_arduino", 10);
+        send_pub_ = this->create_publisher<std_msgs::msg::String>("send_to_arduino", 10);
         grab_pub_ = this->create_publisher<std_msgs::msg::Bool>("grabbed", 10);
     }
 
@@ -144,8 +141,8 @@ private:
     rclcpp::TimerBase::SharedPtr serial_timer_;
     // rclcpp::Publisher<coupe_de_france_de_robotique::msg::Encoder>::SharedPtr encoder_publisher_;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr teamBlue_pub_;
-    rclcpp::Publisher<geometry_msgs::msg::Pose>::SharedPtr pose_pub_;
-    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr grab_pub_
+    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr send_pub_;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr grab_pub_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr command_subscriber_;
     bool led_state_;
 };

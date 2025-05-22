@@ -1,8 +1,13 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/bool.hpp"
+#include "std_msgs/msg/string.hpp"
 #include "geometry_msgs/msg/pose.hpp" 
-#include <cstdlib>  // for std::system
-#include <cstdio>   // for std::snprintf
+#include "geometry_msgs/msg/twist.hpp"
+#include <sstream>  // for std::stringstream
+
+#include <iostream>
+#include <unistd.h>   // fork, execlp
+#include <sys/wait.h> // wait
 
 bool teamBlue = false;
 
@@ -15,8 +20,6 @@ public:
   float initial_pose_X = 0.0;
   float initial_pose_Y = 0.0;
   float initial_pose_theta = 0.0;
-
-  bool tring_to_grab = false;
 
   int got_cans = 0;
 
@@ -60,23 +63,8 @@ public:
         goal_pose_theta = 1;
       }
 
-      char cmd[256];
-      std::snprintf(cmd, sizeof(cmd),
-        "ros2 run robot_creation example_nav_to_pose.py --intitial_pose %f,%f,%f --pose %f,%f,%f",
-        initial_pose_X, initial_pose_Y, initial_pose_theta,
-        goal_pose_X, goal_pose_Y, goal_pose_theta
-      );
-      std::system(cmd);
-    } else if (got_cans == 1) {
-      // TODO
-      // find the closest cans
-      // if all there take
-      // go to depo spot
-    }
-
-    if (can_in_hands) {
-      // TODO
-      if (got_cans == 0) {
+      // Go to pose to depo cans
+      if (got_cans == 0 && can_in_hands && !tring_to_grab) {
         if (teamBlue) {
           initial_pose_X = goal_pose_X;
           initial_pose_Y = goal_pose_Y;
@@ -86,8 +74,46 @@ public:
           goal_pose_X = 0.225;
           goal_pose_Y = 0.2; // a bit left
           goal_pose_theta = 0.7071068; // look right
+        } else {
+          initial_pose_X = goal_pose_X;
+          initial_pose_Y = goal_pose_Y;
+          initial_pose_theta = goal_pose_theta;
+          
+          // 0.225, 0.1
+          goal_pose_X = 2.775;
+          goal_pose_Y = 0.2; // a bit left
+          goal_pose_theta = 0.7071068; // look right
         }
       }
+
+      pid_t pid = fork();
+      if (pid == 0) {
+        char init_pose_X_str[32];  std::snprintf(init_pose_X_str, 32, "%f", initial_pose_X);
+        char init_pose_Y_str[32];  std::snprintf(init_pose_Y_str, 32, "%f", initial_pose_Y);
+        char init_pose_Theta_str[32];  std::snprintf(init_pose_Theta_str, 32, "%f", initial_pose_theta);
+        char goal_pose_X_str[32];  std::snprintf(goal_pose_X_str, 32, "%f", goal_pose_X);
+        char goal_pose_Y_str[32];  std::snprintf(goal_pose_Y_str, 32, "%f", goal_pose_Y);
+        char goal_pose_Theta_str[32];  std::snprintf(goal_pose_Theta_str, 32, "%f", goal_pose_theta);
+        char pose_msg[100];
+        std::snprintf(pose_msg, sizeof(pose_msg), "%s,%s,%s,", init_pose_X_str, init_pose_Y_str, init_pose_Theta_str);
+        char goal_msg[100];
+        std::snprintf(goal_msg, sizeof(goal_msg), "%s,%s,%s", goal_pose_X_str, goal_pose_Y_str, goal_pose_Theta_str);
+        execlp("ros2", "ros2", "run", "robot_creation", "example_nav_to_pose.py",
+               "--initial_pose", pose_msg,
+               "--pose", goal_msg,
+               (char*)nullptr);
+               perror("exec");
+      } else if (pid > 0) {
+          wait(nullptr); // wait for the child process
+          perror("wait");
+      } else {
+          perror("fork failed");
+      }
+    } else if (got_cans == 1) {
+      // TODO
+      // find the closest cans
+      // if all there take
+      // go to depo spot
     }
   }
 
@@ -97,12 +123,12 @@ public:
     "/grabed", 10,
     [this](const std_msgs::msg::Bool::SharedPtr msg) {
       if (msg->data) {
-      RCLCPP_INFO(this->get_logger(), "Received /grabed true; launching second navigation (pose2) ...");
-      std::system("ros2 run robot_creation example_nav_to_pose.py pose2");
-        tring_to_grab = false;
-        can_in_hands = true;
+        RCLCPP_INFO(this->get_logger(), "Received /grabed true; launching second navigation (pose2) ...");
+          tring_to_grab = false;
+          can_in_hands = true;
+          // Go to pose to depo cans
+        }
       }
-    }
     );
 
     // Subscribe to /arrived topic.
@@ -110,26 +136,19 @@ public:
       "/arrived", 10,
       [this](const std_msgs::msg::Bool::SharedPtr msg) {
         if (msg->data && !tring_to_grab) {
-        RCLCPP_INFO(this->get_logger(), "Received /arrived true; launching grab.py ...");
+          RCLCPP_INFO(this->get_logger(), "Received /arrived true; sending grab.py ...");
           if (can_in_hands) {
             can_in_hands = false;
             got_cans += 1;
           } else {
-            // Sending to arduino try to grab cans
             tring_to_grab = true;
-            send_arduino_publisher_ = this->create_publisher<std_msgs::msg::String>("send_to_arduino", 10);
-            timer_ = this->create_wall_timer(
-              std::chrono::seconds(1),
-              [this]() {
-                std_msgs::msg::String msg;
-                msg.data = "GRAB:1";
-                send_arduino_publisher_->publish(msg);
-              }
-            );
-          }    
+            std_msgs::msg::String grab_msg;
+            grab_msg.data = "GRAB";
+            send_arduino_pub_->publish(grab_msg);
+          }
         }
       }
-    );
+    );    
 
     // Subscribe to /teamBlue topic.
     team_blue_sub_ = this->create_subscription<std_msgs::msg::Bool>(
@@ -152,10 +171,23 @@ public:
         initial_pose_theta = msg->orientation.z;
       }
     );
+
+    // Subscribe to /cmd_vel topic.
+    cmd_vel_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
+      "/cmd_vel", 10,
+      [this](const geometry_msgs::msg::Twist::SharedPtr msg) {
+        std_msgs::msg::String out_msg;
+        std::stringstream ss;
+        // CMDVEL:1.0,0.0
+        ss << "CMDVEL:" << msg->linear.x << "," << msg->angular.z << ";";
+        out_msg.data = ss.str();
+        send_arduino_pub_->publish(out_msg);
+      }
+    );
   }
 
   void publisher() {
-    send_arduino_pub_ = this->create_publisher<std_msgs::msg::Int32>("send_to_arduino", 10);
+    send_arduino_pub_ = this->create_publisher<std_msgs::msg::String>("send_to_arduino", 10);
   }
 
 private:
@@ -163,9 +195,10 @@ private:
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr grabed_sub_;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr team_blue_sub_;
   rclcpp::Subscription<geometry_msgs::msg::Pose>::SharedPtr pose_sub_;
+  rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_sub_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr send_arduino_pub_;
 
-  bool tring_to_grab;
+  bool tring_to_grab = false;
 };
 
 int main(int argc, char ** argv) {

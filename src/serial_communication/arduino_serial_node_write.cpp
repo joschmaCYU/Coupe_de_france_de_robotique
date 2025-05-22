@@ -52,16 +52,6 @@ public:
                 }
             }
         );
-
-        // send_arduino_publisher_ = this->create_publisher<std_msgs::msg::String>("send_to_arduino", 10);
-        // timer_ = this->create_wall_timer(
-        //     std::chrono::seconds(1),
-        //     [this]() {
-        //         std_msgs::msg::String msg;
-        //         msg.data = "LED:1";
-        //         send_arduino_publisher_->publish(msg);
-        //     }
-        // );
     }
 
 private:
@@ -85,7 +75,6 @@ private:
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::TimerBase::SharedPtr serial_timer_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr send_to_arduino;
-    rclcpp::Publisher<std_msgs::msg::String>::SharedPtr send_arduino_publisher_;
 };
 
 int main(int argc, char **argv) {

@@ -3,16 +3,25 @@ import rclpy
 from rclpy.node import Node
 from rcl_interfaces.msg import Log
 import subprocess
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy
+import time
+
+import os
+import signal
+import sys
 
 class RosoutMonitor(Node):
     def __init__(self):
         super().__init__('rosout_monitor')
-        self.sub = self.create_subscription(Log, '/rosout', self.cb, 10)
+        qos_profile = QoSProfile(depth=10)
+        qos_profile.reliability = QoSReliabilityPolicy.RELIABLE
+        self.sub = self.create_subscription(Log, '/rosout', self.cb, qos_profile)
         self._launched_nav2 = False
         self._launched_loc = False
         self._launched_ini_pose = False
         self._launched_nav_to_pose = False
         self._ini_pose_count = 0   # new: counter for initial pose message occurrences
+        self._tf_timeout_timestamp = None
 
     def cb(self, msg: Log):
         if not self._launched_nav2 and ('Activating controllers: [ diff_cont ]' in msg.msg or 'Activating controllers: [ joint_broad ]' in msg.msg):
@@ -59,10 +68,6 @@ class RosoutMonitor(Node):
                 ])
 
                 subprocess.Popen([
-                    'ros2', 'run', 'robot_creation', 'arduino_serial_node_read'
-                ])
-
-                subprocess.Popen([
                     'ros2', 'run', 'robot_creation', 'arduino_serial_node_write'
                 ])
 
@@ -70,6 +75,17 @@ class RosoutMonitor(Node):
                 #     'ros2', 'run', 'robot_creation', 'multi_pose_navigator'
                 # ])
                 self._launched_nav_to_pose = True
+        if 'Timed out waiting for transform from base_link to map to become available, tf error: Invalid frame ID "map" passed to canTransform argument target_frame - frame does not exist' in msg.msg:
+            if self._tf_timeout_timestamp is None:
+                self._tf_timeout_timestamp = time.time()
+            else:
+                if (time.time() - self._tf_timeout_timestamp) >= 60:
+                    self.get_logger().info('same -> killing everything and relaunching')
+                    os.killpg(os.getpgid(os.getpid()), signal.SIGINT)
+
+                    subprocess.Popen(['ros2', 'run', 'robot_creation', 'max_launch.py'])
+                    self._tf_timeout_timestamp = time.time()
+            
         # if self._launched_nav_to_pose and ("Navigation through poses succeeded!" in msg.msg or "Goal succeeded" in msg.msg):
         #     self.get_logger().info('Next pose !')
         #     subprocess.Popen([
@@ -85,7 +101,7 @@ class RosoutMonitor(Node):
 
 def main(args=None):
     rclpy.init(args=args)
-
+    # TODO find some way to pass the argument to launch_sim
     # 1) Démarrage de la simulation en tâche de fond
     sim_proc = subprocess.Popen([
         'ros2', 'launch', 'robot_creation', 'launch_sim.launch.py'
@@ -94,6 +110,10 @@ def main(args=None):
 
     sim_proc = subprocess.Popen([
         'ros2', 'run', 'rviz2', 'rviz2', '--ros-args', '--log-level', 'error'
+    ])
+
+    subprocess.Popen([
+        'ros2', 'run', 'robot_creation', 'arduino_serial_node_read'
     ])
 
     # 2) Démarrage du nœud de surveillance

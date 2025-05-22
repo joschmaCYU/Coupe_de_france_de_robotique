@@ -10,31 +10,35 @@ from std_msgs.msg import Bool
 import sys
 
 class PoseNavigator(Node):
-    blue_tem = False
-    pose_X, pose_Y, pose_theta, initial_pose_X, initial_pose_Y, initial_pose_theta = 0.0
+    pose_X, pose_Y, pose_theta, initial_pose_X, initial_pose_Y, initial_pose_theta = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
     def __init__(self):
         super().__init__('pose_navigator')
+        self.subscription
+        self.arrived_pub = self.create_publisher(Bool, '/arrived', 10)
+
+        for i in range(len(sys.argv)):
+            if sys.argv[i] == '--pose':
+                pose_args = sys.argv[i+1].split(',')
+                self.pose_X = float(pose_args[0])
+                self.pose_Y = float(pose_args[1])
+                self.pose_theta = float(pose_args[2])
+                self.get_logger().info(f"{self.pose_X}, {self.pose_Y}, {self.pose_theta}")
+            elif sys.argv[i] == '--initial_pose':
+                pose_args = sys.argv[i+1].split(',')
+                self.initial_pose_X = float(pose_args[0])
+                self.initial_pose_Y = float(pose_args[1])
+                self.initial_pose_theta = float(pose_args[2])
+                self.get_logger().info(f"{self.initial_pose_X}, {self.initial_pose_Y}, {self.initial_pose_theta}")
+            else:
+                print(sys.argv[i])
+
         self.navigator = BasicNavigator()
         self.subscription = self.create_subscription(
             PoseStamped,
             '/go_to_pose',
             self.pose_callback,
             10)
-        self.subscription
-        self.arrived_pub = self.create_publisher(Bool, '/arrived', 10)
-
-        for i in range(len(sys.argv)):
-            if sys.argv[i] == '--blue_team':
-                blue_team = sys.argv[i+1]
-            elif sys.argv[i] == '--pose':
-                pose_args = sys.argv[i+1].split(',')
-                x, y, theta = map(float, pose_args)
-            elif sys.argv[i] == '--initial_pose':
-                pose_args = sys.argv[i+1].split(',')
-                initial_pose_X, initial_pose_Y, initial_pose_theta = map(float, pose_args)
-            else:
-                print(sys.argv[i])
 
     def pose_callback(self, msg):
         self.get_logger().info('Received goal pose, setting as initial pose and navigating.')
