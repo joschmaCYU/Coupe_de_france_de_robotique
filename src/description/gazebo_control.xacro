@@ -7,6 +7,8 @@
             <!-- Wheel Information -->
             <!-- <left_joint>left_wheel_joint</left_joint>
             <right_joint>right_wheel_joint</right_joint> -->
+            
+            <num_wheel_pairs>2</num_wheel_pairs>
 
             <left_joint>front_left_wheel_joint</left_joint>
             <left_joint>rear_left_wheel_joint</left_joint>

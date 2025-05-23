@@ -18,21 +18,27 @@ class PoseNavigator(Node):
 
         for i in range(len(sys.argv)):
             if sys.argv[i] == '--pose':
+                self.get_logger().info("arg: " + sys.argv[i+1])
                 pose_args = sys.argv[i+1].split(',')
+                if (len(pose_args) != 4):
+                    self.get_logger().info('Not 4 args')
+                    return
                 self.pose_X = float(pose_args[0])
                 self.pose_Y = float(pose_args[1])
-                self.pose_theta = float(pose_args[2])
-                self.get_logger().info(f"{self.pose_X}, {self.pose_Y}, {self.pose_theta}")
+                self.pose_Z_theta = float(pose_args[2])
+                self.pose_W_theta = float(pose_args[3])
             elif sys.argv[i] == '--initial_pose':
+                self.get_logger().info("arg: " + sys.argv[i+1])
                 pose_args = sys.argv[i+1].split(',')
+                if (len(pose_args) != 4):
+                    self.get_logger().info('Not 4 args')
+                    return
                 self.initial_pose_X = float(pose_args[0])
                 self.initial_pose_Y = float(pose_args[1])
-                self.initial_pose_theta = float(pose_args[2])
-                self.get_logger().info(f"{self.initial_pose_X}, {self.initial_pose_Y}, {self.initial_pose_theta}")
+                self.initial_pose_Z_theta = float(pose_args[2])
+                self.initial_pose_W_theta = float(pose_args[3])
             else:
                 print(sys.argv[i])
-
-        
 
         self.navigator = BasicNavigator()
         self.pose_callback()
@@ -49,8 +55,8 @@ class PoseNavigator(Node):
         initial_pose = PoseStamped()
         initial_pose.header.frame_id = 'map'
         initial_pose.header.stamp = self.navigator.get_clock().now().to_msg()
-        initial_pose.pose.position.x = self.initial_pose_X-1.72
-        initial_pose.pose.position.y = self.initial_pose_Y-1.41
+        initial_pose.pose.position.x = self.initial_pose_X
+        initial_pose.pose.position.y = self.initial_pose_Y
         initial_pose.pose.orientation.z = self.initial_pose_theta
         initial_pose.pose.orientation.w = 1.0
         self.navigator.setInitialPose(initial_pose)
@@ -62,8 +68,8 @@ class PoseNavigator(Node):
         goal_pose = PoseStamped()
         goal_pose.header.frame_id = 'map'
         goal_pose.header.stamp = self.navigator.get_clock().now().to_msg()
-        goal_pose.pose.position.x = self.pose_X-1.72
-        goal_pose.pose.position.y = self.pose_Y-1.41
+        goal_pose.pose.position.x = self.pose_X
+        goal_pose.pose.position.y = self.pose_Y
         goal_pose.pose.orientation.z = self.pose_theta
         goal_pose.pose.orientation.w = 1.0
         self.navigator.goToPose(goal_pose)
@@ -88,7 +94,7 @@ class PoseNavigator(Node):
         else:
             self.get_logger().info('Goal has an invalid return status!')
 
-        self.navigator.lifecycleShutdown()
+        # self.navigator.lifecycleShutdown()
 
 def main():
     rclpy.init()

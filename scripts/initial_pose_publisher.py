@@ -36,20 +36,23 @@ class InitialPosePublisher(Node):
         msg.header.frame_id = 'map'
         
         # Set position (x, y, z)
+        # https://www.andre-gaschler.com/rotationconverter/
+
         if self.team_blue:
-            msg.pose.pose.position.x = 0.225-1.72
-            msg.pose.pose.position.y = 0.875-1.41
-            msg.pose.pose.orientation.z = -1.0
+            msg.pose.pose.position.x = 0.225
+            msg.pose.pose.position.y = 0.875
+            msg.pose.pose.orientation.z = 0.0
+            msg.pose.pose.orientation.w = 1.0
         else:
-            msg.pose.pose.position.x = 2.775-1.72
-            msg.pose.pose.position.y = 0.875-1.41
+            msg.pose.pose.position.x = 2.775
+            msg.pose.pose.position.y = 0.875
             msg.pose.pose.orientation.z = 1.0
+            msg.pose.pose.orientation.w = 0.0
+        
         msg.pose.pose.position.z = 0.0
         
         msg.pose.pose.orientation.x = 0.0
-        msg.pose.pose.orientation.y = 0.0
-        
-        msg.pose.pose.orientation.w = 0.0
+        msg.pose.pose.orientation.y = 0.0        
         
         msg.pose.covariance = [
             0.25, 0.0, 0.0, 0.0, 0.0, 0.0,    # X

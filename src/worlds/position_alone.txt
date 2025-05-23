@@ -1,42 +1,38 @@
-GradinBR:
+Yellow.I 2.775,0.875,1.0,0.0
 
-GradinBL:
+Yellow.C1 2.75,0.4,0.0,1.0
 
-GradinTR:
+Yellow.D1 2.775,0.2, 0.7071068,-0.707106
 
-GradinTL:
+Yellow.C2 1.9,0.775,0.7071068,0.7071068
 
-GradinBCL:
+Yellow.D2 1.225,0.3,0.7071068,-0.707106
 
-GradinBCR:
+Yellow.C3 0.725,0.425,0.707106,-0.707106
 
-GradinBCC:
+Yellow.D3 0.725,0.3,0.707106,-0.707106
 
-GradinTCL:
+Blue.Pose_1
+initial_pose_X = 0.225;
+        initial_pose_Y = 0.875;
+        initial_pose_Z_theta = 1.0;
+        initial_pose_W_theta = 0.0;
+        // 0.075 0.4 0 (center of BR)
+        goal_pose_X = 0.150; // go a bit above (more ?)
+        goal_pose_Y = 0.4;
+        goal_pose_Z_theta = 0.0;
+        goal_pose_W_theta = 1.0;
+      }
 
-GradinTCR:
+      if (read the text file for the first inital pose use every line begging with : Yellow.I.
+        Then if got_cans == 0 && can_in_hands / && !tring_to_grab) {
+        initial_pose_X = goal_pose_X;
+        initial_pose_Y = goal_pose_Y;
+        initial_pose_Z_theta = goal_pose_Z_theta;
+        initial_pose_W_theta = goal_pose_W_theta;
 
-GradinTCC:
-
-
-ZoneBBR:
-
-ZoneBBC:
-
-ZoneYBR:
-
-ZoneYBL:
-
-ZoneYCR:
-
-ZoneBCR:
-
-ZoneBTR:
-
-ZoneBTL:
-
-ZoneYTR:
-
-ZoneYTC:
-
-ZoneBTL:
+        // 0.225, 0.1
+        goal_pose_X = 0.225;
+        goal_pose_Y = 0.2; // a bit left
+        goal_pose_Z_theta = 0.7071068;
+        goal_pose_W_theta = 0.7071068;

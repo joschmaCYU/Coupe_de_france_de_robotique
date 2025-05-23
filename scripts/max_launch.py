@@ -27,14 +27,14 @@ class RosoutMonitor(Node):
         if not self._launched_nav2 and ('Activating controllers: [ diff_cont ]' in msg.msg or 'Activating controllers: [ joint_broad ]' in msg.msg):
             self.get_logger().info('Activation détectée : lancement de Nav2')
             subprocess.Popen([
-                'ros2', 'launch', 'robot_creation', 'navigation_launch.py',
+                'ros2', 'launch', 'robot_creation', 'navigation_launch_new.py',
                 'use_sim_time:=true', 'map_subscribe_transient_local:=true'
             ])
             self._launched_nav2 = True
         if not self._launched_loc and 'Timed out waiting for transform from base_link to map to become available' in msg.msg:
             self.get_logger().info('Activation détectée : lancement de localisation')
             subprocess.Popen([
-                'ros2', 'launch', 'robot_creation', 'localization_launch.py',
+                'ros2', 'launch', 'robot_creation', 'localization_launch_new.py',
                 'use_sim_time:=true', 'map:=./src/robot_creation/src/my_map/my_map_save.yaml'
             ])
             self._launched_loc = True
@@ -82,9 +82,8 @@ class RosoutMonitor(Node):
                 if (time.time() - self._tf_timeout_timestamp) >= 40:
                     self.get_logger().info('same -> killing everything and relaunching')
                     # sys.exit(1)
-                    os.killpg(os.getpgid(os.getpid()), signal.SIGABRT)
 
-                    subprocess.Popen(['ros2', 'run', 'robot_creation', 'max_launch.py'])
+                    # subprocess.Popen(['ros2', 'run', 'robot_creation', 'max_launch.py'])
                     self._tf_timeout_timestamp = time.time()
             
         # if self._launched_nav_to_pose and ("Navigation through poses succeeded!" in msg.msg or "Goal succeeded" in msg.msg):
