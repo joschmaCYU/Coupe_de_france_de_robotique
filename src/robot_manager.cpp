@@ -45,41 +45,30 @@ public:
 
     // if blue start 0.225, 0.875
     // if yellow start 2.775, 0.875
+
+    static const std::vector<std::pair<std::string, std::string>> seq = {
+      {"I", "C1"},  {"C1", "D1"}, {"D1", "C2"},
+      {"C2", "D2"}, {"D2", "C3"}, {"C3", "D3"}};
+    size_t idx = got_cans * 2 + (can_in_hands ? 1 : 0);
     if (teamBlue) {
-      // match just started go to grab cans
-      if (got_cans == 0 && !can_in_hands) {
-        auto init = readPose("Blue.I");
+      if (idx < seq.size()) {
+        auto init_label = std::string("Blue.") + seq[idx].first;
+        auto goal_label = std::string("Blue.") + seq[idx].second;
+
+        auto init = readPose(init_label);
         initial_pose_X = init[0];
         initial_pose_Y = init[1];
         initial_pose_Z_theta = init[2];
         initial_pose_W_theta = init[3];
-        auto goal = readPose("Blue.C1");
+
+        auto goal = readPose(goal_label);
         goal_pose_X = goal[0];
         goal_pose_Y = goal[1];
         goal_pose_Z_theta = goal[2];
         goal_pose_W_theta = goal[3];
       }
-
-      if (got_cans == 0 && can_in_hands) {
-        auto init = readPose("Blue.C1");
-        initial_pose_X = init[0];
-        initial_pose_Y = init[1];
-        initial_pose_Z_theta = init[2];
-        initial_pose_W_theta = init[3];
-        auto goal = readPose("Blue.D1");
-        goal_pose_X = goal[0];
-        goal_pose_Y = goal[1];
-        goal_pose_Z_theta = goal[2];
-        goal_pose_W_theta = goal[3];
       }
     } else {
-      static const std::vector<std::pair<std::string, std::string>> seq = {
-          {"I", "C1"},  {"C1", "D1"}, {"D1", "C2"},
-          {"C2", "D2"}, {"D2", "C3"}, {"C3", "D3"}};
-
-      // Compute index: two states per can count (before grab, after grab)
-
-      size_t idx = got_cans * 2 + (can_in_hands ? 1 : 0);
       if (idx < seq.size()) {
         auto init_label = std::string("Yellow.") + seq[idx].first;
         auto goal_label = std::string("Yellow.") + seq[idx].second;
@@ -96,16 +85,8 @@ public:
         goal_pose_Z_theta = goal[2];
         goal_pose_W_theta = goal[3];
       }
-
-      RCLCPP_INFO(this->get_logger(), "got_cans: %d", got_cans);
-      RCLCPP_INFO(this->get_logger(), "initial_pose: %f, %f, %f, %f",
-                  initial_pose_X, initial_pose_Y, initial_pose_Z_theta,
-                  initial_pose_W_theta);
-      RCLCPP_INFO(this->get_logger(), "goal_pose: %f, %f, %f, %f", goal_pose_X,
-                  goal_pose_Y, goal_pose_Z_theta, goal_pose_W_theta);
-
-      // sendPose();
     }
+    // sendPose();
   }
 
   void sendPose() {

@@ -31,6 +31,10 @@ add_executable(robot_manager src/robot_manager.cpp)
 ament_target_dependencies(robot_manager rclcpp std_msgs geometry_msgs)
 install(TARGETS robot_manager DESTINATION lib/${PROJECT_NAME})
 
+add_executable(invert_laser src/invert_laser.cpp)
+ament_target_dependencies(invert_laser rclcpp sensor_msgs)
+install(TARGETS invert_laser DESTINATION lib/${PROJECT_NAME})
+
 install(DIRECTORY src/launch src/worlds src/description src/config scripts src/serial_communication
   DESTINATION share/${PROJECT_NAME}
 )

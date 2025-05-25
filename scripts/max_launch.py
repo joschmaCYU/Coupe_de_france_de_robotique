@@ -97,25 +97,25 @@ def main(args=None):
     rclpy.init(args=args)
     # TODO find some way to pass the argument to launch_sim
     # 1) Démarrage de la simulation en tâche de fond
-    sim_proc = subprocess.Popen([
-        'ros2', 'launch', 'robot_creation', 'launch_sim.launch.py'
-    ])
+    sim_proc = subprocess.Popen(['ros2', 'launch', 'robot_creation', 'launch_sim.launch.py'], stdout=subprocess.PIPE, 
+                       shell=True, preexec_fn=os.setsid)
     # ros2 run rviz2 rviz2 --ros-args --log-level error
 
-    sim_proc = subprocess.Popen([
-        'ros2', 'run', 'rviz2', 'rviz2', '--ros-args', '--log-level', 'error'
-    ])
+    rviz_proc = subprocess.Popen(['ros2', 'run', 'rviz2', 'rviz2', '--ros-args', '--log-level', 'error'], stdout=subprocess.PIPE, 
+                       shell=True, preexec_fn=os.setsid)
 
-    subprocess.Popen([
-        'ros2', 'run', 'robot_creation', 'arduino_serial_node_read'
-    ])
+    serial_proc = subprocess.Popen(['ros2', 'run', 'robot_creation', 'arduino_serial_node_read'], stdout=subprocess.PIPE, 
+                       shell=True, preexec_fn=os.setsid)
 
     # 2) Démarrage du nœud de surveillance
     monitor = RosoutMonitor()
     rclpy.spin(monitor)
 
     # 3) Nettoyage
-    sim_proc.wait()
+    # os.killpg(os.getpgid(sim_proc.pid), signal.SIGINT)
+    # os.killpg(os.getpgid(rviz_proc.pid), signal.SIGINT)
+    # os.killpg(os.getpgid(serial_proc.pid), signal.SIGINT)
+    # sim_proc.wait()
     monitor.destroy_node()
     rclpy.shutdown()
 
