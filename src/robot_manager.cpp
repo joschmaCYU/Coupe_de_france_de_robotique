@@ -67,7 +67,6 @@ public:
         goal_pose_Z_theta = goal[2];
         goal_pose_W_theta = goal[3];
       }
-      }
     } else {
       if (idx < seq.size()) {
         auto init_label = std::string("Yellow.") + seq[idx].first;
