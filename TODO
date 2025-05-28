@@ -26,6 +26,14 @@ TODO :
 - Do a button that on = blue team, off = yellow team (find some way to pass the argument to launch_sim)
 - Fix arduino (cmd_vel)
 - Send only once to arduino ?
+
+- Démarage rasp lancer max launch
+- quand circuit ouvert (tir tirettte) lancer nav2 (mouvement)
+- Led pour dire ubuntu allumer
+- Led pour dire différent stade d'avancement (loc = jaune, nav = vert ...)
+- Bouton pour faire un ctr+c dans console puis si réapuyé ouvrire console et run max_launch
+- Inverser lidar test
+- move robot avant arrière
 REAL ROBOT :
 - Change to the good device in ros2 control
 - enc_counts_per_rev
