@@ -101,7 +101,7 @@ class RosoutMonitor(Node):
 
                     os.killpg(sim_proc.pid, signal.SIGINT)
                     os.killpg(rviz_proc.pid, signal.SIGINT)
-                    os.killpg(rviz_proc.pid, signal.SIGINT)
+                    os.killpg(serial_proc.pid, signal.SIGINT)
 
                     if nav_proc != None:
                         os.killpg(nav_proc.pid, signal.SIGINT)
@@ -118,10 +118,20 @@ def main(args=None):
     # TODO find some way to pass the argument to launch_sim
 
     monitor = RosoutMonitor()
-    rclpy.spin(monitor)
-    
-    monitor.destroy_node()
-    rclpy.shutdown()
-
+    try:
+        rclpy.spin(monitor)
+    except KeyboardInterrupt:
+        monitor.get_logger().info('KeyboardInterrupt received: shutting down subprocesses')
+        # kill all subprocess groups if running
+        for proc in [sim_proc, rviz_proc, serial_proc, nav_proc, loc_proc]:
+            if proc is not None:
+                try:
+                    os.killpg(proc.pid, signal.SIGINT)
+                except Exception:
+                    pass
+    finally:
+        monitor.destroy_node()
+        rclpy.shutdown()
+ 
 if __name__ == '__main__':
     main()

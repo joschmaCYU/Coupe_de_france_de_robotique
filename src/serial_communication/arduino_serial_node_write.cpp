@@ -27,7 +27,7 @@ public:
             // Create and open serial port
             serial_port_ = std::make_unique<SerialPort>(
                 *io_context_,
-                "/dev/ttyUSB0",  // Device path
+                "/dev/ttyACM0",  // Device path
                 config
             );
             

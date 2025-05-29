@@ -104,11 +104,11 @@ def generate_launch_description():
         ]
     )
 
-    ros_gz_image_bridge = Node(
-        package="ros_gz_image",
-        executable="image_bridge",
-        arguments=["/camera/image_raw"]
-    )
+    # ros_gz_image_bridge = Node(
+    #     package="ros_gz_image",
+    #     executable="image_bridge",
+    #     arguments=["/camera/image_raw"]
+    # )
 
 
 
@@ -155,7 +155,7 @@ def generate_launch_description():
         diff_drive_spawner,
         joint_broad_spawner,
         ros_gz_bridge,
-        ros_gz_image_bridge,
+        # ros_gz_image_bridge,
         teleop_keyboard,
         twist_stamper,
     ])

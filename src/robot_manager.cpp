@@ -30,21 +30,9 @@ public:
   bool can_in_hands = false;
 
   RobotManager() : Node("robot_manager") {
-    // Check if blue or yellow team
-    // TODO
-    // make a file of all the can coords (center) && depo spot
-    // find the closest cans
-    // if all there take
-    // go to depo spot
-    // else
-    // find other closest cans
+    // TODO checi if all there take
     publisher();
     subscribers();
-
-    // TODO remove this from main needs to be called when needed
-
-    // if blue start 0.225, 0.875
-    // if yellow start 2.775, 0.875
 
     static const std::vector<std::pair<std::string, std::string>> seq = {
       {"I", "C1"},  {"C1", "D1"}, {"D1", "C2"},
@@ -85,7 +73,7 @@ public:
         goal_pose_W_theta = goal[3];
       }
     }
-    // sendPose();
+    sendPose();
   }
 
   void sendPose() {

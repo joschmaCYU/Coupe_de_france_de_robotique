@@ -10,7 +10,7 @@ from std_msgs.msg import Bool
 import sys
 
 class PoseNavigator(Node):
-    pose_X, pose_Y, pose_theta, initial_pose_X, initial_pose_Y, initial_pose_theta = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+    pose_X, pose_Y, pose_theta_Z, pose_theta_W, initial_pose_X, initial_pose_Y, initial_pose_theta_Z, initial_pose_theta_W = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 
     def __init__(self):
         super().__init__('pose_navigator')
@@ -57,8 +57,8 @@ class PoseNavigator(Node):
         initial_pose.header.stamp = self.navigator.get_clock().now().to_msg()
         initial_pose.pose.position.x = self.initial_pose_X
         initial_pose.pose.position.y = self.initial_pose_Y
-        initial_pose.pose.orientation.z = self.initial_pose_theta
-        initial_pose.pose.orientation.w = 1.0
+        initial_pose.pose.orientation.z = self.initial_pose_theta_Z
+        initial_pose.pose.orientation.w = self.initial_pose_theta_W
         self.navigator.setInitialPose(initial_pose)
 
         # Wait for navigation to fully activate
@@ -70,8 +70,8 @@ class PoseNavigator(Node):
         goal_pose.header.stamp = self.navigator.get_clock().now().to_msg()
         goal_pose.pose.position.x = self.pose_X
         goal_pose.pose.position.y = self.pose_Y
-        goal_pose.pose.orientation.z = self.pose_theta
-        goal_pose.pose.orientation.w = 1.0
+        goal_pose.pose.orientation.z = self.pose_theta_Z
+        goal_pose.pose.orientation.w = self.initial_pose_theta_W
         self.navigator.goToPose(goal_pose)
 
         while not self.navigator.isTaskComplete():

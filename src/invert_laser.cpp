@@ -41,7 +41,7 @@ public:
     publisher_ = this->create_publisher<sensor_msgs::msg::LaserScan>(
       "/scan_inv",  rclcpp::QoS(5));
     subscription_ = this->create_subscription<sensor_msgs::msg::LaserScan>(
-      "/scan", rclcpp::QoS(5),
+      "/ldlidar_node/scan", rclcpp::QoS(5),
       std::bind(&InvertLaserNode::scanCB, this, std::placeholders::_1));
   }
 
