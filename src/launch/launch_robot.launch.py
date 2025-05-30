@@ -116,13 +116,13 @@ def generate_launch_description():
     #
     # Replace the diff_drive_spawner in the final return with delayed_diff_drive_spawner
 
-    """teleop_keyboard = Node(
+    teleop_keyboard = Node(
             package="teleop_twist_keyboard",
             executable="teleop_twist_keyboard",
             prefix="xterm -e",
-            parameters=[{'stamped': True}],
-            remappings=[('cmd_vel','/diff_cont/cmd_vel')]
-    )"""
+            
+            remappings=[('cmd_vel','/diff_cont/cmd_vel_unstamped')]
+    )
 
     # Launch them all!
     return LaunchDescription([
@@ -136,5 +136,5 @@ def generate_launch_description():
         delayed_controller_manager,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
-        #teleop_keyboard
+        teleop_keyboard
     ])

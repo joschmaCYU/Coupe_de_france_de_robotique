@@ -12,8 +12,9 @@
     <xacro:unless value="$(arg use_ros2_control)">
         <xacro:include filename="gazebo_control.xacro" />
     </xacro:unless>
-
-    <xacro:include filename="lidar.xacro" />
+    <xacro:if value="$(arg sim_mode)">
+        <xacro:include filename="lidar.xacro" />
+    </xacro:if>
     <!-- <xacro:include filename="camera.xacro" /> -->
     <xacro:include filename="world.xacro" />
 </robot>

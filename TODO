@@ -23,8 +23,13 @@ To run ultimate sim commands :
 - ros2 run robot_creation example_nav_to_pose.py
 
 Fast :
+rviz2
+ros2 launch robot_creation launch_robot.launch.py
 ros2 launch robot_creation navigation_launch_new.py use_sim_time:=false map_subscribe_transient_local:=true
+ros2 launch ldlidar_stl_ros2 ld19.launch.py
+ros2 run robot_creation invert_laser
 ros2 launch robot_creation localization_launch_new.py use_sim_time:=false map:=./src/robot_creation/src/my_map/my_map_save.yaml
+
 
 TODO :
 - Do a button that on = blue team, off = yellow team (find some way to pass the argument to launch_sim)

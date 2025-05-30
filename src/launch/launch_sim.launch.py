@@ -142,7 +142,7 @@ def generate_launch_description():
             parameters=[{'use_sim_time': True}],
             remappings=[('/cmd_vel_in','/diff_cont/cmd_vel_unstamped'),
                         ('/cmd_vel_out','/diff_cont/cmd_vel')]
-         )
+    )
 
     # Launch them all!
     return LaunchDescription([

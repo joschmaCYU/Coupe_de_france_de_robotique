@@ -55,6 +55,7 @@ install(PROGRAMS
   scripts/lidar_distance_node.py
   scripts/initial_pose_publisher.py
   scripts/max_launch.py
+  scripts/detector.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
